@@ -1,0 +1,160 @@
+/* Tổng thể */
+body {
+    background-color: #eef1f7;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+/* Container chính */
+.container-fluid {
+    width: 95%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Hiệu ứng xuất hiện mượt */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tiêu đề */
+h2 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 28px;
+    color: #1a1a2e;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+/* Bộ lọc trạng thái */
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+form select {
+    width: 250px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #007bff;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+form select:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 8px rgba(0, 91, 187, 0.3);
+}
+
+form button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Bảng dữ liệu */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th {
+    background: #007bff;
+    color: white;
+    padding: 14px;
+    text-align: center;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.table td {
+    text-align: center;
+    padding: 14px;
+    background: #f9fafc;
+    font-size: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:hover {
+    background: #e2e6ea;
+}
+
+/* Các ô dữ liệu riêng biệt */
+.table td:first-child {
+    font-weight: bold;
+    color: #333;
+}
+
+.table td:last-child {
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Nút bấm */
+.btn-primary, .btn-warning {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background: #007bff;
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-warning {
+    background: #ff9800;
+    border: none;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #e68900;
+}

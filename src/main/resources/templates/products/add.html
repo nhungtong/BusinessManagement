@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm sản phẩm</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/add.css}">
+</head>
+<body>
+<div th:replace="~{admin :: sidebar}"></div>
+
+<div class="container-fluid mt-4 content-container">
+    <h2>Thêm sản phẩm</h2>
+
+    <div class="form-container">
+        <form th:action="@{/products/add}" method="post" th:object="${product}" enctype="multipart/form-data">
+
+            <!-- Tên sản phẩm -->
+            <div class="mb-3">
+                <label for="productName" class="form-label">Tên sản phẩm</label>
+                <input type="text" id="productName" name="productName" th:field="*{productName}" class="form-control" required>
+            </div>
+
+            <!-- Giá sản phẩm -->
+            <div class="mb-3">
+                <label for="price" class="form-label">Giá</label>
+                <input type="number" id="price" name="price" th:field="*{price}" class="form-control" required>
+            </div>
+            <!-- Giảm giá sản phẩm -->
+            <div class="mb-3">
+                <label for="discount" class="form-label">Giảm giá</label>
+                <input type="number" id="discount" name="discount" th:field="*{discount}" class="form-control" required>
+            </div>
+            <!-- Mô tả sản phẩm -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô tả</label>
+                <textarea id="description" name="description" th:field="*{description}" class="form-control" rows="3"></textarea>
+            </div>
+
+            <!-- Danh mục sản phẩm -->
+            <div class="mb-3">
+                <label for="category" class="form-label">Danh mục</label>
+                <select id="category" name="category" th:field="*{category}" class="form-control">
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.categoryName}"></option>
+                </select>
+            </div>
+
+            <!-- Ảnh sản phẩm -->
+            <div class="mb-3">
+                <label for="image" class="form-label">Ảnh sản phẩm</label>
+                <input type="file" id="image" name="file" class="form-control">
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="form-actions d-flex justify-content-between">
+                <a th:href="@{/products/list}" class="btn btn-secondary">Quay lại</a>
+                <button type="submit" class="btn btn-success">Thêm sản phẩm</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

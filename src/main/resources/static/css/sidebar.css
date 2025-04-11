@@ -1,0 +1,44 @@
+/* Sidebar bên trái */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px; /* Độ rộng sidebar */
+    height: 100vh; /* Chiều cao full màn hình */
+    background-color: #343a40;
+    color: white;
+    padding-top: 20px;
+}
+
+.sidebar .list-group {
+    border-radius: 0;
+    padding: 10px;
+}
+
+.sidebar .list-group-item {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    transition: background 0.3s;
+}
+
+.sidebar .list-group-item:hover {
+    background-color: #495057;
+}
+
+.sidebar .list-group-item a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar .list-group-item a:hover {
+    color: #ffc107;
+}
+
+/* Nội dung chính bên phải sidebar */
+.content-container {
+    margin-left: 260px; /* Khoảng cách với sidebar */
+    padding: 20px;
+}

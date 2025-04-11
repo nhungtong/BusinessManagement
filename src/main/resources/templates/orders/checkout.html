@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/Header.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+
+</head>
+<body>
+<div th:replace="fragments/Header :: header"></div>
+<div class="container mt-5">
+    <h2>Thông tin đặt hàng</h2>
+
+    <form th:action="@{/orders/submit-checkout}" method="post">
+        <!-- Tên người dùng và Số điện thoại nằm trên một hàng -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="username" class="form-label">Tên người dùng</label>
+                <input type="text" id="username" name="username" class="form-control" th:text="${username}" readonly />
+            </div>
+            <div class="col-md-6">
+                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required />
+            </div>
+        </div>
+
+        <!-- Địa chỉ -->
+        <h5>Địa chỉ giao hàng</h5>
+        <div class="row mb-3">
+            <div class="col-md-12 col-lg-3">
+                <label class="form-label">Tỉnh/Thành phố</label>
+                <input type="text" name="province" class="form-control" placeholder="Nhập tỉnh/thành phố" required />
+            </div>
+            <div class="col-md-12 col-lg-3">
+                <label class="form-label">Quận/Huyện</label>
+                <input type="text" name="district" class="form-control" placeholder="Nhập quận/huyện" required />
+            </div>
+            <div class="col-md-12 col-lg-3">
+                <label class="form-label">Phường/Xã</label>
+                <input type="text" name="ward" class="form-control" placeholder="Nhập phường/xã" required />
+            </div>
+            <div class="col-md-12 col-lg-3">
+                <label class="form-label">Tên đường</label>
+                <input type="text" name="street" class="form-control" placeholder="Số nhà, tên đường..." required />
+            </div>
+        </div>
+        <!-- Danh sách sản phẩm -->
+        <h5>Sản phẩm</h5>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${selectedItems}">
+                <input type="hidden" name="selectedIds" th:value="${item.id}" />
+                <td th:text="${item.product.productName}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${#numbers.formatDecimal(item.product.finalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Tổng tiền -->
+        <div class="text-end mb-3">
+            <h5>Tổng tiền: <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span></h5>
+        </div>
+            <label><input type="radio" name="paymentMethod" value="COD" checked> Thanh toán khi nhận hàng (COD)</label><br>
+            <label><input type="radio" name="paymentMethod" value="VNPAY"> Thanh toán qua VNPay</label><br>
+
+        <button type="submit" class="btn btn-primary">Đặt hàng</button>
+    </form>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</html>

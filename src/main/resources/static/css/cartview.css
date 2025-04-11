@@ -1,0 +1,116 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding-top: 80px;
+}
+
+.container {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 30px auto;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.btn-primary {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    transition: 0.3s;
+    white-space: nowrap;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 300px;
+    /* Thêm đoạn này để căn giữa */
+    margin: 0 auto; /* Căn giữa theo chiều ngang */
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    background: #f8f9fa;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    border-collapse: separate;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.table thead {
+    background: #007bff;
+    color: #ffffff;
+    text-align: left;
+}
+
+.table th, .table td {
+    padding: 14px;
+    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.table tbody tr {
+    transition: background 0.3s, transform 0.3s;
+}
+
+.table tbody tr:hover {
+    background: rgba(0, 123, 255, 0.1);
+    transform: scale(1.02);
+}
+p {
+    color: #777;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 15px;
+    animation: fadeIn 1s ease-in-out;
+}
+.total-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #dc3545; /* đỏ nhẹ */
+    margin-right: 10px;
+}
+
+.cart-summary {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.cart-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-item p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.cart-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}

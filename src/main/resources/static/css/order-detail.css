@@ -1,0 +1,86 @@
+/* Tổng thể */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card thông tin đơn */
+.card {
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Tổng tiền nổi bật */
+.card-body p:last-child span {
+    color: #e74c3c;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* Bảng sản phẩm */
+.table {
+    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #34495e;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 15px;
+    padding: 12px;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+/* Dòng xen kẽ */
+.table tbody tr:nth-child(even) td {
+    background-color: #f2f4f7;
+}
+
+/* Hover dòng */
+.table tbody tr:hover td {
+    background-color: #e0e6ed;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Nút quay lại */
+.btn-secondary {
+    background-color: #7f8c8d;
+    border: none;
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #626e70;
+    transform: translateY(-1px);
+}
+.button-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+

@@ -1,0 +1,116 @@
+/* Đảm bảo rằng Header không bị ảnh hưởng */
+header {
+    z-index: 10;
+    position: relative; /* Thêm vị trí để tránh bị đè */
+    background: #333; /* Để tránh bị ảnh hưởng bởi background */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Body vẫn giữ nguyên */
+body {
+    background: #f0f4f8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    padding-top: 100px; /* Chỉ áp dụng cho login-box */
+}
+
+/* 📦 Hộp đăng nhập đẹp hơn */
+.login-box {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 🏷 Tiêu đề */
+.login-box h3 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* 🔤 Ô nhập liệu */
+.input-group {
+    background: #eef3f7;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* ✍️ Biểu tượng */
+.input-group-text {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-size: 20px;
+    padding: 10px;
+}
+
+/* 🎯 Input */
+.form-control {
+    border: none;
+    background: none;
+    box-shadow: none;
+    padding: 12px;
+    font-size: 16px;
+    color: #333;
+    width: 100%;
+}
+
+/* ✨ Khi input được chọn */
+.form-control:focus {
+    border: none;
+    box-shadow: none;
+}
+
+/* 👁 Nút hiển thị mật khẩu */
+.toggle-password {
+    cursor: pointer;
+    margin-right: 10px;
+    color: #6c757d;
+}
+
+/* 🔘 Nút Login */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ff4d4d, #cc0000); /* Màu nền đỏ */
+    border: none;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #cc0000, #990000); /* Màu nền đỏ đậm hơn khi hover */
+    box-shadow: 0px 5px 15px rgba(255, 0, 0, 0.3); /* Đổ bóng màu đỏ */
+}
+
+
+/* 🔗 Link hỗ trợ */
+.extra-links {
+    margin-top: 10px;
+}
+
+.extra-links a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}

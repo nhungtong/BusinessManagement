@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh mục sản phẩm</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/Header.css}">
+  <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/Header :: header"></div>
+
+<div class="container mt-4">
+  <!-- Tiêu đề danh mục -->
+  <h2 class="mb-4" th:text="${category.categoryName}">Tên danh mục</h2>
+
+  <!-- Bộ lọc theo khoảng giá -->
+  <form class="row g-3 mb-4" method="get" th:action="@{'/categories/' + ${category.id} + '/shopper/products'}">
+    <div class="col-md-4">
+      <select class="form-select" name="priceRange">
+        <option value="">-- Chọn khoảng giá --</option>
+        <option value="0-1000000" th:selected="${param.priceRange == '0-1000000'}">Dưới 1 triệu</option>
+        <option value="1000000-3000000" th:selected="${param.priceRange == '1000000-3000000'}">1 - 3 triệu</option>
+        <option value="3000000-5000000" th:selected="${param.priceRange == '3000000-5000000'}">3 - 5 triệu</option>
+        <option value="5000000-10000000" th:selected="${param.priceRange == '5000000-10000000'}">5 - 10 triệu</option>
+        <option value="10000000-20000000" th:selected="${param.priceRange == '10000000-20000000'}">10 - 20 triệu</option>
+        <option value="20000000-40000000" th:selected="${param.priceRange == '20000000-40000000'}">20 - 40 triệu</option>
+        <option value="40000000-999999999" th:selected="${param.priceRange == '40000000-999999999'}">Trên 40 triệu</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary">Lọc</button>
+      <a th:href="@{'/categories/' + ${category.id} + '/shopper/products'}" class="btn btn-secondary ms-2">Xóa lọc</a>
+    </div>
+  </form>
+
+  <!-- Danh sách sản phẩm thuộc danh mục (sau khi đã lọc trong Controller) -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="col" th:each="product : ${products}">
+    <div class="product-card p-3 border rounded position-relative h-100">
+        <!-- Badge giảm giá -->
+        <div class="discount-badge" th:if="${product.discount > 0}">
+          -<span th:text="${product.discount}"></span>%
+        </div>
+
+        <!-- Link đến trang chi tiết sản phẩm -->
+        <a th:href="@{/products/{id}(id=${product.id})}">
+          <img th:src="@{${product.image}}" alt="Ảnh sản phẩm" class="img-fluid product-img">
+          <h5 class="product-name mt-2" th:text="${product.productName}"></h5>
+        </a>
+
+        <!-- Nếu có giảm giá -->
+        <div th:if="${product.discount > 0}">
+          <p class="product-price text-danger fw-bold">
+            Giá: <span th:text="${#numbers.formatDecimal(product.finalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+          </p>
+          <p class="product-original-price text-decoration-line-through text-muted mb-0">
+            <small th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></small>
+          </p>
+        </div>
+
+        <!-- Nếu không giảm giá -->
+        <div th:unless="${product.discount > 0}">
+          <p class="product-price">
+            Giá: <span th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

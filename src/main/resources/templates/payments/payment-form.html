@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán VNPay</title>
+</head>
+<body>
+<h2>Nhập mã đơn hàng để thanh toán</h2>
+<form th:action="@{/payment/process}" method="post">
+    <label for="orderId">Mã đơn hàng:</label>
+    <input type="text" id="orderId" name="orderId" required>
+    <button type="submit">Thanh toán</button>
+</form>
+</body>
+</html>

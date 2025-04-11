@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết đơn hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/Header.css}">
+    <link rel="stylesheet" th:href="@{/css/order-detail.css}">
+</head>
+<body>
+<div th:replace="fragments/Header :: header"></div>
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Mã đơn hàng:</strong> <span th:text="${order.id}"></span></p>
+            <p><strong>Ngày đặt hàng:</strong> <span th:text="${order.orderDate}"></span></p>
+            <p><strong>Số điện thoại:</strong> <span th:text="${order.phoneNumber}"></span></p>
+            <p><strong>Trạng thái:</strong> <span th:text="${order.status}"></span></p>
+            <p><strong>Tổng tiền:</strong>
+                <span th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+            </p>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>STT</th>
+            <th>Tên sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="detail, iterStat : ${orderDetails}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${detail.product.productName}"></td>
+            <td th:text="${detail.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(detail.product.finalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="button-wrapper">
+        <a th:href="@{/orders/track}" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>
+</body>
+</html>

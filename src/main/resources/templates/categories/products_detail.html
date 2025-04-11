@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sản phẩm theo danh mục</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+<div th:replace="~{admin :: sidebar}"></div>
+<div class="container mt-4">
+    <h2 class="text-center">Sản phẩm trong danh mục: <span th:text="${category.categoryName}"></span></h2>
+
+    <div th:if="${products.isEmpty()}">
+        <p class="text-center text-muted">Không có sản phẩm nào trong danh mục này.</p>
+    </div>
+
+    <div class="row mt-4" th:unless="${products.isEmpty()}">
+        <div class="col-md-4 mb-4" th:each="product : ${products}">
+            <div class="card h-100">
+                <img th:src="${product.image}" class="card-img-top" alt="Hình ảnh sản phẩm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.productName}"></h5>
+                    <p class="card-text text-muted" th:text="${product.description}"></p>
+                    <p class="fw-bold text-danger" th:text="'Giá: ' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
+                    <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a th:href="@{/categories/list}" class="btn btn-secondary">Quay lại danh sách danh mục</a>
+    </div>
+</div>
+</body>
+</html>

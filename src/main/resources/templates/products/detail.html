@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Font Awesome để hiển thị biểu tượng sao -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/Header.css}">
+    <link rel="stylesheet" th:href="@{/css/productdetail.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/Header :: header"></div>
+
+<!-- Detail Section -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img id="product-image" th:src="@{${product.image}}" alt="Ảnh sản phẩm" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h3 th:text="${product.productName}"></h3>
+
+            <!-- Nếu có giảm giá -->
+            <div th:if="${product.discount > 0}">
+                <p class="product-price text-decoration-line-through text-muted mb-0">
+                    Giá gốc:
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                </p>
+                <p class="product-price text-danger fw-bold">
+                    Giá:
+                    <span th:text="${#numbers.formatDecimal(product.finalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                </p>
+            </div>
+
+            <!-- Nếu không có giảm giá -->
+            <div th:if="${product.discount == 0}">
+                <p class="product-price text-dark fw-bold">
+                    Giá:
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                </p>
+            </div>
+
+            <p th:text="${product.description}"></p>
+
+            <!-- Nút Mua ngay luôn hiển thị -->
+            <form id="buy-now-form" th:action="@{/cart/add}" method="post">
+                <input type="hidden" name="productId" th:value="${product.id}" />
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="btn btn-primary mt-3" id="buy-now-btn">Mua ngay</button>
+            </form>
+
+            <!-- Thông báo flash -->
+            <div th:if="${successMessage}" class="alert alert-success mt-3" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger mt-3" th:text="${errorMessage}"></div>
+        </div>
+    </div>
+
+    <!-- Thông số kỹ thuật -->
+    <div class="mt-5">
+        <h4>Thông số kỹ thuật</h4>
+        <table class="table table-bordered">
+            <tbody>
+            <tr th:each="spec : ${specs}">
+                <th th:text="${spec.specName}"></th>
+                <td th:text="${spec.specValue}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Hiển thị các đánh giá -->
+    <h2 class="review-section-title">Đánh giá sản phẩm</h2>
+    <div class="review-wrapper" th:each="report : ${reports}">
+        <div class="review-card">
+            <div class="review-header">
+                <strong th:text="${report.shopper.username}">Tên người dùng</strong>
+                <div class="review-stars">
+                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                    <i class="fas fa-star"
+                       th:classappend="${i <= report.rating} ? ' filled' : ''"></i>
+                </span>
+                </div>
+            </div>
+            <p class="review-content" th:text="${report.feedback}">Nội dung đánh giá</p>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!-- Animation và Submit Form -->
+<script>
+    $(document).ready(function () {
+        $('#buy-now-form').on('submit', function (e) {
+            const imgToDrag = $('#product-image');
+            const cartIcon = $('#cart-icon'); // nhớ thêm icon này trong header nếu cần
+
+            if (imgToDrag.length && cartIcon.length) {
+                e.preventDefault(); // ngăn form gửi ngay
+                const imgClone = imgToDrag.clone()
+                    .offset({
+                        top: imgToDrag.offset().top,
+                        left: imgToDrag.offset().left
+                    })
+                    .css({
+                        'opacity': '0.8',
+                        'position': 'absolute',
+                        'height': imgToDrag.height(),
+                        'width': imgToDrag.width(),
+                        'z-index': '1000'
+                    })
+                    .appendTo($('body'))
+                    .animate({
+                        top: cartIcon.offset().top + 10,
+                        left: cartIcon.offset().left + 10,
+                        width: 40,
+                        height: 40
+                    }, 800, 'swing', () => {
+                        imgClone.remove();
+                        cartIcon.addClass('cart-animate');
+                        setTimeout(() => cartIcon.removeClass('cart-animate'), 500);
+
+                        // Gửi form sau animation
+                        $('#buy-now-form')[0].submit();
+                    });
+            }
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

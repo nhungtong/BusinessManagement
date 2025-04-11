@@ -1,0 +1,30 @@
+<!-- categories/detail.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sản phẩm theo danh mục</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2>Sản phẩm trong danh mục</h2>
+    <div class="row">
+        <div class="col-md-3" th:each="product : ${products}">
+            <div class="card">
+                <img th:src="@{${product.image}}" class="card-img-top" alt="Sản phẩm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.productName}"></h5>
+                    <p class="card-text text-danger" th:text="${product.price} + ' VND'"></p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/shopper_list" class="btn btn-secondary mt-3">Quay lại danh mục</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

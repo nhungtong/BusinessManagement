@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Chủ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/Header.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}"> <!-- Thêm file CSS riêng -->
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/Header :: header"></div>
+
+<!-- Wrapper -->
+<div class="container mt-3 home-wrapper">
+
+    <!-- Danh mục và banner -->
+    <div class="row category-banner-wrapper">
+        <!-- Danh mục -->
+        <div class="col-md-3 category-sidebar">
+                <ul class="list-group category-list">
+                    <li class="list-group-item category-item" th:each="category : ${categories}">
+                        <a th:href="@{'#product-list-' + ${category.id}}"
+                           th:text="${category.categoryName}"
+                           class="text-decoration-none category-link"></a>
+                    </li>
+                </ul>
+        </div>
+
+        <!-- Banner -->
+        <div id="bannerCarousel" class="carousel slide container" data-bs-ride="carousel" data-bs-interval="10000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/images/banner1.jpg" class="d-block w-100" alt="Banner 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="/images/banner2.jpg" class="d-block w-100" alt="Banner 2">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+
+        <!-- Danh sách sản phẩm -->
+    <div class="product-list-wrapper mt-4">
+        <div th:each="category : ${categories}" class="category-section mb-4"
+             th:attr="id='product-list-' + ${category.id}">
+            <h3 class="category-title" th:text="${category.categoryName}"></h3>
+
+            <!-- Container chứa sản phẩm -->
+            <div class="product-container">
+                <div class="product-item" th:each="product : ${category.products}">
+                    <div class="product-card p-3 border rounded position-relative">
+                        <!-- Badge giảm giá góc trên trái -->
+                        <div class="discount-badge" th:if="${product.discount > 0}">
+                            -<span th:text="${product.discount}"></span>%
+                        </div>
+
+                        <!-- Link đến chi tiết sản phẩm -->
+                        <a th:href="@{/products/{id}(id=${product.id})}">
+                            <img th:src="@{${product.image}}" alt="Ảnh sản phẩm" class="img-fluid product-img">
+                            <h3 class="product-name mt-2" th:text="${product.productName}"></h3>
+                        </a>
+
+                        <!-- Nếu có giảm giá -->
+                        <div th:if="${product.discount > 0}">
+                            <p class="product-price text-danger fw-bold">
+                                Giá: <span th:text="${#numbers.formatDecimal(product.finalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                            </p>
+                            <p class="product-original-price text-decoration-line-through text-muted mb-0">
+                                <small th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></small>
+                            </p>
+                        </div>
+
+                        <!-- Nếu không có giảm giá -->
+                        <div th:unless="${product.discount > 0}">
+                            <p class="product-price">
+                                Giá: <span th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <a th:href="@{/categories/{id}/shopper/products(id=${category.id})}" class="view-more-btn">Xem thêm</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+

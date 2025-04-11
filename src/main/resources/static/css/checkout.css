@@ -1,0 +1,90 @@
+/* Tối ưu cho form */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding-top: 80px;
+}
+
+.container {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 30px auto;
+    animation: fadeIn 0.8s ease-in-out;
+}
+/* Tạo khoảng cách giữa các ô input trong mỗi dòng */
+.form-label {
+    display: block;
+
+}
+
+/* Cải tiến giao diện bảng sản phẩm */
+.table {
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #f1f1f1;
+    color: #495057;
+}
+
+.table td {
+    background-color: #ffffff;
+}
+
+/* Cải tiến phần tổng tiền */
+.text-end h5 {
+    font-size: 18px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Button */
+.btn-primary {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    transition: 0.3s;
+    white-space: nowrap;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    margin: 0 auto;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Thanh toán radio */
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Giãn cách các label */
+label {
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}

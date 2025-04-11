@@ -1,0 +1,162 @@
+/* ----------- Cấu trúc chung ----------- */
+.content-container {
+    margin-left: 220px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+    max-width: calc(100vw - 220px);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tiêu đề */
+.content-container h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+/* ----------- Form tìm kiếm ----------- */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-container .form-control {
+    width: 350px;
+    border-radius: 25px;
+    border: 1px solid #007bff;
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-container .form-control:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 8px rgba(0, 91, 187, 0.3);
+}
+
+.search-container .btn {
+    border-radius: 25px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-container .btn:hover {
+    background-color: #0056b3;
+}
+
+/* ----------- Bảng ----------- */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Header */
+.table th {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Hover */
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* ----------- Trạng thái ----------- */
+.table td.status-active {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.table td.status-inactive {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* ----------- Nút hành động ----------- */
+.table td button {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.table td button.edit {
+    background: #28a745;
+    color: white;
+}
+
+.table td button.delete {
+    background: #dc3545;
+    color: white;
+}
+
+.table td button.edit:hover {
+    background: #218838;
+}
+
+.table td button.delete:hover {
+    background: #c82333;
+}
+.rating {
+    color: #f4c150; /* Màu vàng */
+    font-size: 1.2rem; /* Kích thước */
+    letter-spacing: 2px; /* Khoảng cách giữa các sao */
+}
+/* ----------- Responsive ----------- */
+@media (max-width: 992px) {
+    .content-container {
+        margin-left: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-container {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .sidebar {
+        width: 180px;
+    }
+
+    .table-container {
+        box-shadow: none;
+    }
+
+    .table th, .table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

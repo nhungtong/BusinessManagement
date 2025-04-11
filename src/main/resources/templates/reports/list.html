@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách địa chỉ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/users.css}">
+</head>
+<body>
+
+<div th:replace="~{admin :: sidebar}"></div>
+
+<div class="container-fluid mt-4 content-container">
+    <h2>Danh sách phản hồi</h2>
+    <div class="table-responsive table-container">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên khách hàng</th>
+                <th>Sản phẩm</th>
+                <th>Đánh giá</th>
+                <th>Nội dung</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each=" reports : ${reports}">
+                <td th:text="${reports.id}"></td>
+                <td th:text="${reports.shopper.username}"></td>
+                <td th:text="${reports.product.productName}"></td>
+                <td>
+                    <span th:each="i : ${#numbers.sequence(1, reports.rating)}">⭐</span>
+                </td>
+                <td th:text="${reports.feedback}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

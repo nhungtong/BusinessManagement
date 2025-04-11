@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách thanh toán</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/users.css}">
+</head>
+<body>
+
+<div th:replace="~{admin :: sidebar}"></div>
+
+<div class="container-fluid mt-4 content-container">
+    <h2>Danh sách thanh toán</h2>
+
+    <!-- Bộ lọc tìm kiếm -->
+    <div class="search-container">
+        <form th:action="@{/payments/list}" method="get" class="d-flex">
+            <select name="status" class="form-select me-2">
+                <option value="">Tất cả</option>
+                <option value="Pending" th:selected="${selectedStatus == 'Pending'}">Chờ xử lý</option>
+                <option value="Completed" th:selected="${selectedStatus == 'Completed'}">Hoàn thành</option>
+                <option value="Failed" th:selected="${selectedStatus == 'Failed'}">Thất bại</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </form>
+    </div>
+
+    <!-- Danh sách thanh toán -->
+    <div class="table-responsive table-container">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Mã hóa đơn</th>
+                <th>Số tiền (VNĐ)</th>
+                <th>Phương thức</th>
+                <th>Tình trạng</th>
+                <th>Ngày thanh toán</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${payments}">
+                <td th:text="${payment.id}"></td>
+                <td th:text="${payment.order.id}"></td>
+                <td th:text="${#numbers.formatInteger(payment.amount, 0, 'COMMA')}"></td>
+                <td th:text="${payment.paymentMethod}"></td>
+                <td th:text="${payment.status}"></td>
+                <td th:text="${payment.paymentDate != null ? #dates.format(payment.paymentDate, 'dd/MM/yyyy HH:mm') : 'N/A'}"></td>
+
+                <td>
+                    <form th:action="@{/payments/delete/{id}(id=${payment.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
