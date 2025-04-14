@@ -26,10 +26,6 @@ public class CategoryService {
     public List<Category> searchCategories(String keyword) {
         return categoryRepository.findByCategoryNameContainingIgnoreCase(keyword);
     }
-    public Category findById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục với id: " + id));
-    }
     public Category saveCategory(Category category) {
         return categoryRepository.save(category);
     }

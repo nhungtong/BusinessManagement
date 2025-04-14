@@ -29,26 +29,20 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Kiểm tra và mã hóa mật khẩu nếu chưa mã hóa khi ứng dụng khởi động
+//     Kiểm tra và mã hóa mật khẩu nếu chưa mã hóa khi ứng dụng khởi động
     @PostConstruct
     public void encryptExistingPasswords() {
-        try {
-            List<User> users = userRepository.findAll(); // Lấy danh sách tất cả người dùng
+        List<User> users = userRepository.findAll();
 
-            for (User user : users) {
-                String password = user.getPassword();
-                if (password != null && !password.startsWith("$2a$")) {
-                    String encodedPassword = passwordEncoder.encode(password);
-                    user.setPassword(encodedPassword);
-                    userRepository.save(user);
-                    System.out.println("Đã mã hóa mật khẩu cho user: " + user.getUsername());
-                }
+        for (User user : users) {
+            String password = user.getPassword();
+            if (!password.startsWith("$2a$")) { // Kiểm tra nếu mật khẩu chưa mã hóa (BCrypt bắt đầu bằng "$2a$")
+                String encodedPassword = passwordEncoder.encode(password);
+                user.setPassword(encodedPassword);
+                userRepository.save(user);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
-
 
     public String register(RegisterDTO dto) {
         if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
@@ -61,13 +55,12 @@ public class AuthService {
             return "Email đã tồn tại!";
         }
 
-        // Tìm role theo tên từ combobox
         Role role = roleRepository.findByRoleName(dto.getRolename())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
-        // Mã hóa mật khẩu trước khi lưu
+
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
 
-        User user = new User(null, dto.getUsername(), encodedPassword,
+        User user = new User(null, dto.getUsername(),encodedPassword,
                 dto.getPhonenumber(), dto.getEmail(), dto.getDob(), role, true);
         userRepository.save(user);
 

@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    // Lấy đánh giá của một user theo sản phẩm
     Optional<Report> findByShopperAndProduct(User shopper, Product product);
     List<Report> findByProductId(Long productId);
 }

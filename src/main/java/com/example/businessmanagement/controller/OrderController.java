@@ -2,6 +2,7 @@ package com.example.businessmanagement.controller;
 
 import com.example.businessmanagement.dto.OrderRequest;
 import com.example.businessmanagement.dto.ReportDTO;
+import com.example.businessmanagement.dto.ReviewForm;
 import com.example.businessmanagement.entity.*;
 import com.example.businessmanagement.repository.*;
 import com.example.businessmanagement.service.*;
@@ -9,9 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -30,8 +33,9 @@ public class OrderController {
     private final VNPayService vnpayService;
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
+    private final UserService userService;
 
-    public OrderController(OrderService orderService, ReportService reportService, OrderDetailService orderDetailService, UserRepository userRepository, CartService cartService, VNPayService vnpayService, OrderRepository orderRepository, PaymentRepository paymentRepository) {
+    public OrderController(OrderService orderService, ReportService reportService, OrderDetailService orderDetailService, UserRepository userRepository, CartService cartService, VNPayService vnpayService, OrderRepository orderRepository, PaymentRepository paymentRepository, UserService userService) {
         this.orderService = orderService;
         this.reportService = reportService;
         this.orderDetailService = orderDetailService;
@@ -40,17 +44,18 @@ public class OrderController {
         this.vnpayService = vnpayService;
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
+        this.userService = userService;
     }
 
     // danh sách đơn hàng theo trạng thái
     @GetMapping("/list")
     public String listOrders(@RequestParam(value = "status", required = false) String status, Model model) {
         List<Order> orders = orderService.getOrdersByStatus(status);
-        List<String> orderStatuses = Arrays.asList("Đang chờ xác nhận", "Đang giao hàng", "Đã giao hàng");
+        List<String> orderStatuses = Arrays.asList("Đang chờ xác nhận", "Đang giao hàng", "Đã giao hàng","Đã hủy");
 
         model.addAttribute("orders", orders);
         model.addAttribute("orderStatuses", orderStatuses);
-        model.addAttribute("selectedStatus", status); // Lưu trạng thái đã chọn để giữ nguyên trên giao diện
+        model.addAttribute("selectedStatus", status);
 
         return "orders/list";
     }
@@ -121,7 +126,7 @@ public class OrderController {
         model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("username", username);
 
-        return "orders/checkout"; // View hiển thị thông tin trước khi đặt hàng
+        return "orders/checkout";
     }
     @PostMapping("/submit-checkout")
     public String submitCheckout(@RequestParam String province,
@@ -135,8 +140,6 @@ public class OrderController {
                                  RedirectAttributes redirectAttributes,
                                  Principal principal) {
 
-        // 1. Lấy user từ Principal (hoặc session)
-        // Lấy user
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -144,14 +147,10 @@ public class OrderController {
 
         List<Cart> selectedItems = cartService.getCartItemsByIds(selectedIds, username);
 
-
-        // 3. Tính tổng tiền
         int totalAmount = cartService.calculateTotalAmount(selectedItems);
 
-        // 4. Gọi service để đặt hàng
         Order order = orderService.placeOrder(user, selectedItems, province, district, ward, street, phoneNumber, paymentMethod, totalAmount);
 
-        // 5. Xử lý theo phương thức thanh toán
         if ("COD".equalsIgnoreCase(paymentMethod)) {
             redirectAttributes.addFlashAttribute("success", "Đặt hàng thành công (COD)");
             return "redirect:/orders/success?orderId=" + order.getId();
@@ -160,8 +159,6 @@ public class OrderController {
             String vnpUrl = vnpayService.createPaymentUrl(orderInfo, String.valueOf(totalAmount), String.valueOf(order.getId()), request);
             return "redirect:" + vnpUrl;
         }
-
-        // 6. Nếu phương thức không hợp lệ
         redirectAttributes.addFlashAttribute("error", "Phương thức thanh toán không hợp lệ");
         return "redirect:/checkout";
     }
@@ -171,11 +168,10 @@ public class OrderController {
     public String orderSuccess(@RequestParam("orderId") Long orderId,
                                @RequestParam(value = "transactionId", required = false) String transactionId,
                                Model model) {
-        // Tìm đơn hàng theo ID
         Optional<Order> optionalOrder = orderRepository.findWithAddressById(orderId);
         if (optionalOrder.isEmpty()) {
             model.addAttribute("message", "Không tìm thấy đơn hàng!");
-            return "orders/failure"; // View lỗi nếu cần
+            return "orders/failure";
         }
 
         Order order = optionalOrder.get();
@@ -192,7 +188,6 @@ public class OrderController {
 
         model.addAttribute("order", order);
 
-        // Nếu có transactionId (tức là từ thanh toán VNPay)
         if (transactionId != null && !transactionId.isEmpty()) {
             Optional<Payment> paymentOpt = paymentRepository.findByTransactionId(transactionId);
             if (paymentOpt.isPresent()) {
@@ -201,17 +196,15 @@ public class OrderController {
                 model.addAttribute("transactionId", transactionId);
                 model.addAttribute("paymentMethod", payment.getPaymentMethod());
             } else {
-                // Không tìm thấy thông tin thanh toán => báo lỗi nhẹ hoặc hiển thị mặc định
                 model.addAttribute("paymentStatus", "Không xác định");
                 model.addAttribute("paymentMethod", "VNPay (không rõ giao dịch)");
             }
         } else {
-            // Nếu COD thì để trạng thái mặc định
             model.addAttribute("paymentStatus", "Chờ thanh toán (COD)");
             model.addAttribute("paymentMethod", "COD");
         }
 
-        return "orders/success"; // View đặt hàng thành công
+        return "orders/success";
     }
 
 
@@ -228,12 +221,12 @@ public class OrderController {
         Long userId = user.getId();
 
         List<Cart> cartItems = cartService.getCartItems(userId);
-        // Tính tổng số lượng sản phẩm trong giỏ hàng
+
         int cartItemCount = cartItems.stream()
                 .mapToInt(Cart::getQuantity)
                 .sum();
 
-        // Thêm số lượng sản phẩm trong giỏ hàng vào model
+
         model.addAttribute("cartItemCount", cartItemCount);
         return "orders/track";
     }
@@ -252,12 +245,11 @@ public class OrderController {
         Long userId = user.getId();
 
         List<Cart> cartItems = cartService.getCartItems(userId);
-        // Tính tổng số lượng sản phẩm trong giỏ hàng
+
         int cartItemCount = cartItems.stream()
                 .mapToInt(Cart::getQuantity)
                 .sum();
 
-        // Thêm số lượng sản phẩm trong giỏ hàng vào model
         model.addAttribute("cartItemCount", cartItemCount);
         model.addAttribute("orders", filteredOrders);
         model.addAttribute("statuses", List.of("Đang chờ xác nhận", "Đang giao hàng", "Đã giao hàng"));
@@ -280,8 +272,6 @@ public class OrderController {
         int cartItemCount = cartItems.stream()
                 .mapToInt(Cart::getQuantity)
                 .sum();
-
-        // Thêm số lượng sản phẩm trong giỏ hàng vào model
         model.addAttribute("cartItemCount", cartItemCount);
         model.addAttribute("order", order);
         model.addAttribute("orderDetails", orderDetails);
@@ -290,23 +280,36 @@ public class OrderController {
     }
     // Hiển thị trang đánh giá sản phẩm của đơn hàng
     @GetMapping("/review/{orderId}")
-    public String reviewOrder(@PathVariable Long orderId, Model model) {
-        List<Product> products = reportService.getProductsByOrder(orderId);
+    public String reviewOrder(@PathVariable Long orderId, Model model, Principal principal) {
+        List<Product> products = orderService.handleOrder(orderId);
+
+        // Tạo danh sách rỗng các reviewDTO tương ứng với mỗi sản phẩm
+        List<ReportDTO> reviewList = new ArrayList<>();
+        for (Product p : products) {
+            ReportDTO dto = new ReportDTO();
+            dto.setProductId(p.getId());
+            dto.setProductName(p.getProductName());
+            reviewList.add(dto);
+        }
+
+        ReviewForm reviewForm = new ReviewForm();
+        reviewForm.setReviews(reviewList);
+
         model.addAttribute("products", products);
-        model.addAttribute("orderId", orderId);
+        model.addAttribute("reviewForm", reviewForm);
         return "orders/review";
     }
 
+
     // Lưu đánh giá
     @PostMapping("/review/submit")
-    @ResponseBody
-    public ResponseEntity<?> submitReview(@RequestBody List<ReportDTO> reviews, Principal principal) {
+    public String submitReview(@ModelAttribute("reviewForm") ReviewForm reviewForm, Principal principal) {
         Long shopperId = orderService.getUserByUsername(principal.getName()).getId();
 
-        for (ReportDTO review : reviews) {
+        for (ReportDTO review : reviewForm.getReviews()) {
             reportService.saveReview(shopperId, review.getProductId(), review.getRating(), review.getFeedback());
         }
 
-        return ResponseEntity.ok(Map.of("success", true));
+        return "redirect:/orders/track";
     }
 }

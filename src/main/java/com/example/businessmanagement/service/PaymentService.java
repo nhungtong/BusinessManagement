@@ -28,11 +28,4 @@ public class PaymentService {
     public void deletePayment(Long id) {
         paymentRepository.deleteById(id);
     }
-
-    public void savePayment(Payment payment) {
-        paymentRepository.save(payment);
-    }
-    public Optional<Payment> findByOrderId(Long orderId) {
-        return paymentRepository.findByOrderId(orderId);
-    }
 }

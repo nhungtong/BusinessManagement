@@ -34,27 +34,24 @@ public class CartService {
         cartRepository.save(cart);
     }
     public void addToCart(Long userId, Long productId, int quantity) {
-        // Lấy thông tin người dùng
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Lấy thông tin sản phẩm
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Kiểm tra xem sản phẩm có trong giỏ hàng của người dùng không
         Cart cartItem = cartRepository.findByShopperAndProduct(user, product)
-                .orElse(null); // Nếu không có, trả về null thay vì tạo mới đối tượng
+                .orElse(null);
 
         if (cartItem != null) {
-            // Nếu đã có sản phẩm trong giỏ hàng, cập nhật số lượng
+
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         } else {
-            // Nếu không có, tạo mới một CartItem
+
             cartItem = new Cart(user, product, quantity);
         }
 
-        // Lưu giỏ hàng vào cơ sở dữ liệu
         cartRepository.save(cartItem);
     }
     public List<Cart> getCartItems(Long userId) {
@@ -67,7 +64,7 @@ public class CartService {
     public int calculateTotalAmount(List<Cart> cartItems) {
         int total = 0;
         for (Cart item : cartItems) {
-            int price = item.getProduct().getFinalPrice(); // Giả sử price là int
+            int price = item.getProduct().getFinalPrice();
             total += price * item.getQuantity();
         }
         return total;
@@ -75,8 +72,4 @@ public class CartService {
     public List<Cart> getCartItemsByIds(List<Long> ids, String username) {
         return cartRepository.findByIdInAndShopper_Username(ids, username);
     }
-    public List<Cart> getCartItemsByUser(User user) {
-        return cartRepository.findByShopper(user);
-    }
-
 }

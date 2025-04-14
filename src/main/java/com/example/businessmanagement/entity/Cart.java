@@ -7,8 +7,7 @@ import lombok.*;
 @Table(name = "cart")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +28,16 @@ public class Cart {
         this.shopper = shopper;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public Cart(Long id, User shopper, Product product, int quantity) {
+        this.id = id;
+        this.shopper = shopper;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    public Cart() {
     }
 
     public Long getId() {

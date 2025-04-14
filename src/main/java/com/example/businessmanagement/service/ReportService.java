@@ -25,12 +25,6 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
-    // Lấy danh sách sản phẩm của đơn hàng từ bảng order_details
-    public List<Product> getProductsByOrder(Long orderId) {
-        List<OrderDetails> orderDetails = orderDetailRepository.findByOrderId(orderId);
-        return orderDetails.stream().map(OrderDetails::getProduct).toList();
-    }
-
     // Lưu đánh giá sản phẩm
     public void saveReview(Long shopperId, Long productId, int rating, String feedback) {
         User shopper = userRepository.findById(shopperId)

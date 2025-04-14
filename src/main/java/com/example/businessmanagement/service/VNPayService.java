@@ -25,7 +25,7 @@ public class VNPayService {
     }
 
     public String createPaymentUrl(String orderInfo, String amount, String orderId, HttpServletRequest request) {
-        String vnp_ExpireDate = getVnpExpireDate(); // Gọi phương thức để lấy thời gian hết hạn
+        String vnp_ExpireDate = getVnpExpireDate();
 
         // Tạo tham số đầu vào
         Map<String, String> vnpParams = new HashMap<>();
@@ -81,9 +81,6 @@ public class VNPayService {
         StringBuilder paymentUrl = new StringBuilder(vnPayConfig.getVnp_PayUrl());
         paymentUrl.append("?").append(queryString.toString());
         System.out.println("Generated Payment URL: " + paymentUrl.toString());
-
-        // Lưu log đầy đủ (bao gồm URL thanh toán và chữ ký) để có thể kiểm tra
-        // Nếu bạn muốn kiểm tra chữ ký, bạn có thể lấy URL và phân tích hoặc so sánh với VNPay
 
         // Trả về URL thanh toán
         return paymentUrl.toString();

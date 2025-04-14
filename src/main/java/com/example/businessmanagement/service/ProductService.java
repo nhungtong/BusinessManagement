@@ -68,7 +68,5 @@ public class ProductService {
     public Product getProductById1(Long id) {
         return productRepository.findById(id).orElse(null);
     }
-    public List<Product> getProductsByCategoryAndPrice(Long categoryId, Integer minPrice, Integer maxPrice) {
-        return productRepository.findByCategoryIdAndPriceBetween(categoryId, minPrice, maxPrice);
-    }
+
 }

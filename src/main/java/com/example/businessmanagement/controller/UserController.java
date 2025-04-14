@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping("/list")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "users/list"; // Hiển thị danh sách users
+        return "users/list";
     }
 
     @GetMapping("/search")

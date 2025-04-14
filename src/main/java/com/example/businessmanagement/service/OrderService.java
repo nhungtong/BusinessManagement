@@ -10,11 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
 public class OrderService {
@@ -55,11 +53,9 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
 
-        // Lấy thông tin shipper từ username
         User shipper = userRepository.findByUsername(shipperUsername)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy shipper"));
 
-        // Nếu chọn "Đang giao hàng", cập nhật trạng thái và shipper_id
         if ("Đang giao hàng".equals(status)) {
             order.setStatus(status);
             order.setShipper(shipper);
@@ -90,7 +86,7 @@ public class OrderService {
         if ("Đã giao hàng".equals(status)) {
             order.setDeliveryDate(new Date());
             order.setFailureReason(null);
-        } else if ("Giao hàng không thành công".equals(status)) {
+        } else if ("Đã hủy".equals(status)) {
             order.setFailureReason(failureReason);
             order.setDeliveryDate(null);
         }
@@ -106,7 +102,7 @@ public class OrderService {
     // Tính tỷ lệ đơn hàng giao thành công
     public double calculateSuccessRate(String shipperUsername) {
         long totalDelivered = orderRepository.countByShipperUsernameAndStatus(shipperUsername, "Đã giao hàng");
-        long totalFailed = orderRepository.countByShipperUsernameAndStatus(shipperUsername, "Giao hàng không thành công");
+        long totalFailed = orderRepository.countByShipperUsernameAndStatus(shipperUsername, "Đã hủy");
 
         long totalOrders = totalDelivered + totalFailed;
         return (totalOrders == 0) ? 0 : ((double) totalDelivered / totalOrders) * 100;
@@ -120,10 +116,7 @@ public class OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Không tìm thấy đơn hàng với ID = " + id));
     }
-    public Address getAddressById(Long addressId) {
-        return addressRepository.findById(addressId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy địa chỉ với ID: " + addressId));
-    }
+
     // Lấy danh sách đơn hàng theo shopperUserId
     public List<Order> getOrdersByShopper(String username) {
         User user = userRepository.findByUsername(username)
@@ -144,28 +137,27 @@ public class OrderService {
         addressRepository.save(newAddress);
 
         Order order = new Order();
-        order.setShopper(user); // set đối tượng User trực tiếp
-        order.setPhoneNumber(phoneNumber); // đúng tên biến là phoneNumber (viết hoa N)
-        order.setAddressEnd(newAddress); // set trực tiếp entity Address
+        order.setShopper(user);
+        order.setPhoneNumber(phoneNumber);
+        order.setAddressEnd(newAddress);
         order.setStatus("Đang chờ xác nhận");
         order.setOrderDate(new Date());
-        order.setPayment_method(paymentMethod); // đúng tên field trong entity
-        order.setTotalAmount(totalAmount); // kiểu int, không phải BigDecimal như trước
+        order.setPayment_method(paymentMethod);
+        order.setTotalAmount(totalAmount);
 
         orderRepository.save(order);
 
 
         for (Cart item : cartItems) {
             OrderDetails detail = new OrderDetails();
-            detail.setOrder(order); // set entity Order
-            detail.setProduct(item.getProduct()); // set entity Product
+            detail.setOrder(order);
+            detail.setProduct(item.getProduct());
             detail.setQuantity(item.getQuantity());
 
             orderDetailsRepository.save(detail);
 
-            cartService.removeFromCart(item.getId()); // xóa giỏ hàng
+            cartService.removeFromCart(item.getId());
         }
-
 
         return order;
     }
@@ -173,8 +165,8 @@ public class OrderService {
         return orderRepository.getMonthlyRevenue(start, end);
     }
     public List<TopSellingProductDto> getTopSellingProducts(Date startDate, Date endDate) {
-        // Truy vấn top 5 sản phẩm bán chạy
-        Pageable pageable = PageRequest.of(0, 5);  // Lấy 5 sản phẩm
+
+        Pageable pageable = PageRequest.of(0, 5);
         List<Object[]> results = orderRepository.findTopSellingProducts(startDate, endDate, pageable);
 
         List<TopSellingProductDto> topSellingProducts = new ArrayList<>();
@@ -182,11 +174,25 @@ public class OrderService {
             Long productId = (Long) result[0];
             Long totalQuantitySold = (Long) result[1];
 
-            // Bạn có thể lấy thông tin chi tiết sản phẩm từ ProductRepository nếu cần
             TopSellingProductDto dto = new TopSellingProductDto(productId, totalQuantitySold);
             topSellingProducts.add(dto);
         }
 
         return topSellingProducts;
+    }
+    public List<Product> handleOrder(Long orderId) {
+        Optional<Order> orderOpt = orderRepository.findById(orderId);
+
+        if (orderOpt.isEmpty()) {
+            throw new RuntimeException("Order not found");
+        }
+
+        Order order = orderOpt.get();
+
+        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrderId(order.getId());
+
+        return orderDetails.stream()
+                .map(OrderDetails::getProduct)
+                .collect(Collectors.toList());
     }
 }

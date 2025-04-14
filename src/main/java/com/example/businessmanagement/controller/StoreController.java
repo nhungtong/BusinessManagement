@@ -33,32 +33,27 @@ public class StoreController {
     public String searchStores(@RequestParam(required = false) String province,
                                @RequestParam(required = false) String district,
                                Model model,@AuthenticationPrincipal UserDetails userDetails) {
-        // Lấy danh sách tỉnh
+
         List<String> provinces = storeService.getAllProvinces();
 
-
-
-        // Tìm các cửa hàng dựa trên tỉnh và huyện
         List<Store> stores = storeService.searchStores(province, district);
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
         Long userId = user.getId();
 
         List<Cart> cartItems = cartService.getCartItems(userId);
-        // Tính tổng số lượng sản phẩm trong giỏ hàng
+
         int cartItemCount = cartItems.stream()
                 .mapToInt(Cart::getQuantity)
                 .sum();
 
-        // Thêm số lượng sản phẩm trong giỏ hàng vào model
         model.addAttribute("cartItemCount", cartItemCount);
-        // Thêm các dữ liệu cần thiết vào model
         model.addAttribute("provinces", provinces);
         model.addAttribute("stores", stores);
         model.addAttribute("province", province);
         model.addAttribute("district", district);
 
-        return "stores/search"; // Trả về view tìm kiếm
+        return "stores/search";
     }
 
 }

@@ -1,10 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Đánh giá đơn hàng</title>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/Header.css}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding-top: 100px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 30px auto;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        label {
+            font-weight: 600;
+            margin-top: 15px;
+            display: block;
+            color: #333;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+        }
+
+        .btn-primary {
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            border: none;
+            transition: 0.3s;
+            white-space: nowrap;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0056b3, #003f7f);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        hr {
+            margin: 30px 0;
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+        .star-rating {
+            display: inline-block;
+            direction: ltr;
+        }
+
+        .star-rating i {
+            font-size: 24px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+            margin-right: 5px;
+        }
+
+        .star-rating i.active {
+            color: #ffc107;
+        }
+        .submit-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+    </style>
 </head>
 <body>
+<th:block th:replace="~{fragments/Header :: header}"></th:block>
+<div class="container mt-5">
+    <h2 class="mb-4">Đánh giá sản phẩm trong đơn hàng <span th:text="${orderId}"></span></h2>
+
+    <!-- Form gửi đánh giá -->
+    <form th:action="@{/orders/review/submit}" th:object="${reviewForm}" method="post">
+        <div th:each="review, stat : *{reviews}">
+            <input type="hidden" th:field="*{reviews[__${stat.index}__].productId}" />
+            <h5 th:text="*{reviews[__${stat.index}__].productName}" class="mb-2 text-primary"></h5>
+            <label>Đánh giá sao:</label>
+            <div class="star-rating" th:with="rating=*{reviews[__${stat.index}__].rating}">
+                <input type="hidden" th:field="*{reviews[__${stat.index}__].rating}" />
+                <i class="bi bi-star-fill" th:each="i : ${#numbers.sequence(1, 5)}"
+                   th:classappend="${i <= rating} ? 'active' : ''"
+                   th:data-index="${i}" onclick="handleStarClick(this)"></i>
+            </div>
+
+
+            <label>Phản hồi:</label>
+            <textarea th:field="*{reviews[__${stat.index}__].feedback}" required></textarea>
+            <hr/>
+        </div>
+
+        <div class="submit-wrapper">
+            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </div>
+
+    </form>
+</div>
+<script>
+    function handleStarClick(el) {
+        const container = el.closest('.star-rating');
+        const stars = container.querySelectorAll('i');
+        const clickedIndex = parseInt(el.getAttribute('data-index'));
+
+        stars.forEach((star, index) => {
+            if (index < clickedIndex) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+
+        const hiddenInput = container.querySelector('input[type="hidden"]');
+        hiddenInput.value = clickedIndex;
+    }
+</script>
 
 </body>
 </html>

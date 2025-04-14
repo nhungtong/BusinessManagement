@@ -36,6 +36,7 @@
                 <th>Mã giảm giá</th>
                 <th>Tổng tiền</th>
                 <th>Chi tiết</th>
+                <th>Ghi chú</th>
 
             </tr>
             </thead>
@@ -50,6 +51,7 @@
                 <td th:text="${order.promotion != null ? order.promotion.promoCode : 'Không có'}"></td>
                 <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 2, 'POINT')} + ' VND'"></td>
                 <td><a th:href="@{/orders/detail/{id}(id=${order.id})}" class="btn btn-info">Chi tiết</a></td>
+                <td th:text="${order.failureReason}"></td>
             </tr>
             <tr th:if="${#lists.isEmpty(orders)}">
                 <td colspan="6" class="text-center">Không có đơn hàng nào</td>

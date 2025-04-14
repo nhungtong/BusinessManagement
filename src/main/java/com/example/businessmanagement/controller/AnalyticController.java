@@ -34,15 +34,13 @@ public class AnalyticController {
                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                                 Model model) {
         if (startDate == null || endDate == null) {
-            startDate = LocalDate.now().minusMonths(6).withDayOfMonth(1); // 6 tháng gần nhất
+            startDate = LocalDate.now().minusMonths(6).withDayOfMonth(1);
             endDate = LocalDate.now();
         }
 
-        // Chuyển LocalDate thành java.util.Date
         Date startDateDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endDateDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        // Lấy doanh thu từ Repository
         List<RevenueReportDto> reports = orderService.getRevenueBetween(startDateDate, endDateDate);
         if (reports.isEmpty()) {
             System.out.println("No revenue data found.");
@@ -50,7 +48,7 @@ public class AnalyticController {
             System.out.println("Revenue data retrieved successfully.");
         }
         List<String> labels = reports.stream()
-                .map(report -> report.getYear() + "-" + report.getMonth()) // Định dạng 'YYYY-MM'
+                .map(report -> report.getYear() + "-" + report.getMonth())
                 .collect(Collectors.toList());
 
         List<Long> data = reports.stream()

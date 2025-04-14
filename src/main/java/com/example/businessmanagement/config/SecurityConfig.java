@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -15,12 +16,16 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+//@Bean
+//public PasswordEncoder passwordEncoder() {
+//    return NoOpPasswordEncoder.getInstance(); // Tắt mã hóa mật khẩu
+//}
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler customHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index","/categories/**", "/stores/**", "/products/**").permitAll()
+                        .requestMatchers("/", "/index","/categories/**", "/stores/**", "/products/**", "reports/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/css/**", "/images/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("ROLE_ADMIN")

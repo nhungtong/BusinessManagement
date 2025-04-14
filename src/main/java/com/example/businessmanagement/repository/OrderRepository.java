@@ -20,23 +20,21 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByShipperUsernameAndStatus(String shipperUsername, String status);
 
-    // Lấy danh sách đơn hàng theo shopperUserId
     List<Order> findByShipper_IdAndStatus(Long shipperId, String status);
 
     List<Order> findByShopper_Id(Long shopperId);
 
     long countByShipperUsernameAndStatus(String shipperUsername, String status);
 
-    // Lấy danh sách đơn hàng theo shopperUserId và trạng thái
     List<Order> findByShopper_IdAndStatus(Long shopperId, String status);
 
     @Query("SELECT o FROM Order o JOIN FETCH o.addressEnd WHERE o.id = :id")
     Optional<Order> findWithAddressById(@Param("id") Long id);
 
     @Query("SELECT new com.example.businessmanagement.dto.RevenueReportDto(" +
-            "YEAR(o.orderDate), " +  // Trả về năm
-            "MONTH(o.orderDate), " + // Trả về tháng
-            "SUM(o.totalAmount)) " + // Tính tổng doanh thu
+            "YEAR(o.orderDate), " +
+            "MONTH(o.orderDate), " +
+            "SUM(o.totalAmount)) " +
             "FROM Order o " +
             "WHERE o.orderDate BETWEEN :startDate AND :endDate " +
             "GROUP BY YEAR(o.orderDate), MONTH(o.orderDate)")

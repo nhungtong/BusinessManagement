@@ -9,7 +9,6 @@ import java.util.Date;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +49,9 @@ public class User{
 
     public String getUsername() {
         return username;
+    }
+
+    public User() {
     }
 
     public User(Long id, String username, String password, String phoneNumber, String email, Date dob, Role role, boolean isActive) {

@@ -35,26 +35,20 @@ public class HomeController {
     @GetMapping("/")
     public String homePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            // Lấy tên người dùng khi đã đăng nhập
             model.addAttribute("loggedInUser", userDetails.getUsername());
 
-            // Lấy thông tin người dùng từ cơ sở dữ liệu
             User user = userRepository.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
             Long userId = user.getId();
 
-            // Lấy các sản phẩm trong giỏ hàng của người dùng
             List<Cart> cartItems = cartService.getCartItems(userId);
-            // Tính tổng số lượng sản phẩm trong giỏ hàng
             int cartItemCount = cartItems.stream()
                     .mapToInt(Cart::getQuantity)
                     .sum();
 
-            // Thêm số lượng sản phẩm trong giỏ hàng vào model
             model.addAttribute("cartItemCount", cartItemCount);
         }
 
-        // Lấy danh sách các danh mục và sản phẩm
         List<Category> categories = categoryService.getAllCategories();
         List<Product> products = productService.getAllProducts();
 
@@ -65,7 +59,6 @@ public class HomeController {
             }
         }
 
-        // Thêm danh mục và sản phẩm vào model
         model.addAttribute("categories", categories);
         model.addAttribute("products", products);
 

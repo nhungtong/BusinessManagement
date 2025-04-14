@@ -40,7 +40,6 @@ public class CartController {
                             Principal principal,
                             RedirectAttributes redirectAttributes) {
         if (principal == null) {
-            // Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
             return "redirect:/login";
         }
 
@@ -65,10 +64,10 @@ public class CartController {
             quantity = 1;
         }
 
-        // Cập nhật số lượng trong cơ sở dữ liệu
+
         cartService.updateQuantity(cartId, quantity);
 
-        // Lấy dữ liệu giỏ hàng và hiển thị lại view
+
         if (principal == null) {
             return "redirect:/login";
         }
@@ -80,7 +79,7 @@ public class CartController {
 
         List<Cart> cartItems = cartService.getCartItems(userId)
                 .stream()
-                .sorted(Comparator.comparing(Cart::getId)) // Sắp theo ID tăng dần
+                .sorted(Comparator.comparing(Cart::getId))
                 .collect(Collectors.toList());
         double totalPrice = cartItems.stream()
                 .mapToDouble(item -> item.getProduct().getFinalPrice() * item.getQuantity())
@@ -90,14 +89,14 @@ public class CartController {
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
 
-        // Truyền tham số ID của dòng cập nhật vào URL
+
         return "redirect:/cart/view";
     }
 
     @GetMapping("/view")
     public String showCart(Principal principal, Model model) {
         if (principal == null) {
-            return "redirect:/login";  // Nếu người dùng chưa đăng nhập
+            return "redirect:/login";
         }
 
         String username = principal.getName();
@@ -108,13 +107,12 @@ public class CartController {
 
         List<Cart> cartItems = cartService.getCartItems(userId)
                 .stream()
-                .sorted(Comparator.comparing(Cart::getId)) // Sắp theo ID tăng dần
+                .sorted(Comparator.comparing(Cart::getId))
                 .collect(Collectors.toList());
         int cartItemCount = cartItems.stream()
                 .mapToInt(Cart::getQuantity)
-                .sum();  // Tổng số lượng sản phẩm (nếu có quantity)
+                .sum();
 
-        // Tính tổng tiền giỏ hàng
         double totalPrice = 0.0;
         for (Cart item : cartItems) {
             totalPrice += item.getProduct().getFinalPrice() * item.getQuantity();
@@ -122,8 +120,8 @@ public class CartController {
 
         model.addAttribute("userId", userId);
         model.addAttribute("cartItems", cartItems);
-        model.addAttribute("cartItemCount", cartItemCount); // Tổng số lượng sản phẩm
-        model.addAttribute("totalPrice", totalPrice);  // Tổng tiền
+        model.addAttribute("cartItemCount", cartItemCount);
+        model.addAttribute("totalPrice", totalPrice);
 
         return "cart/view";
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Chi tiết đơn hàng</title>
@@ -40,9 +40,10 @@
         </tr>
         </tbody>
     </table>
-    <div class="button-wrapper">
+    <div class="button-wrapper" sec:authorize="hasRole('ROLE_SHOPPER')">
         <a th:href="@{/orders/track}" class="btn btn-secondary">Quay lại</a>
     </div>
+
 </div>
 </body>
 </html>

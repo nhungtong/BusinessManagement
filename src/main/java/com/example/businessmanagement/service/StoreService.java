@@ -43,9 +43,4 @@ public class StoreService {
     public List<String> getAllProvinces() {
         return addressRepository.findAllProvinces();
     }
-
-    // Phương thức lấy danh sách huyện theo tỉnh
-    public List<String> getDistrictsByProvince(String province) {
-        return addressRepository.findDistrictsByProvince(province);
-    }
 }

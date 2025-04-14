@@ -8,6 +8,15 @@ public class ReportDTO {
     private Long productId;
     private int rating;
     private String feedback;
+    private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public Long getProductId() {
         return productId;

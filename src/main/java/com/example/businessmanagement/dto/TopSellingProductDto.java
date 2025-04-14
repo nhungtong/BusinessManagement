@@ -10,7 +10,6 @@ public class TopSellingProductDto {
         this.totalQuantitySold = totalQuantitySold;
     }
 
-    // Getters và setters
     public Long getProductId() {
         return productId;
     }

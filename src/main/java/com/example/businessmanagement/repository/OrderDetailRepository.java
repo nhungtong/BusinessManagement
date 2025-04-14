@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetails, Long> {
-    // Lấy danh sách sản phẩm của đơn hàng
     List<OrderDetails> findByOrderId(Long orderId);
+
 }

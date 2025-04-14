@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,15 @@
 <h2>Thanh toán thành công</h2>
 <p>Trạng thái thanh toán: <span th:text="${status}"></span></p>
 <p>Mã giao dịch: <span th:text="${transactionId}"></span></p>
-<a th:href="@{/}" class="btn btn-primary">Quay lại trang chủ</a>
+  <div class="mt-4 d-flex justify-content-center gap-3">
+    <a th:href="@{/'/'}" class="btn btn-outline-primary" sec:authorize="hasRole('ROLE_SHOPPER')">
+      <i class="bi bi-house-door"></i> Quay lại trang người dùng
+    </a>
+    <a th:href="@{/shipper}" class="btn btn-outline-success" sec:authorize="hasRole('ROLE_SHIPPER')">
+      <i class="bi bi-truck"></i> Quay lại trang giao hàng
+    </a>
+  </div>
+
 </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

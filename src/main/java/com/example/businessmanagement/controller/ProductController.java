@@ -88,40 +88,36 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/products/list";
     }
-    // hiển thị chi tiết sản phẩm
     @GetMapping("/{id}")
-    public String showProductDetail(@PathVariable Long id, Model model,@AuthenticationPrincipal UserDetails userDetails) {
-        Product product = productService.getProductById1(id); // Lấy sản phẩm theo ID
+    public String showProductDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Product product = productService.getProductById1(id);
 
-        // Kiểm tra và thêm tiền tố "/images/" vào URL của ảnh nếu chưa có
         if (product != null && product.getImage() != null && !product.getImage().startsWith("/images/")) {
             product.setImage("/images/" + product.getImage());
         }
 
-        // Lấy danh sách đánh giá của sản phẩm
-        List<Report> reports = reportService.getReportsByProductId(id); // Lấy các đánh giá từ service
-        // Lấy danh sách thông số kỹ thuật của sản phẩm
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
-        Long userId = user.getId();
+        List<Report> reports = reportService.getReportsByProductId(id);
         List<ProductSpecs> specs = productSpecsService.getSpecsByProductId(id);
-        List<Cart> cartItems = cartService.getCartItems(userId);
-        // Tính tổng số lượng sản phẩm trong giỏ hàng
-        int cartItemCount = cartItems.stream()
-                .mapToInt(Cart::getQuantity)
-                .sum();
 
+        int cartItemCount = 0;
 
+        if (userDetails != null) {
+            User user = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-        // Thêm số lượng sản phẩm trong giỏ hàng vào model
+            List<Cart> cartItems = cartService.getCartItems(user.getId());
+            cartItemCount = cartItems.stream()
+                    .mapToInt(Cart::getQuantity)
+                    .sum();
+        }
+
         model.addAttribute("cartItemCount", cartItemCount);
+        model.addAttribute("product", product);
+        model.addAttribute("reports", reports);
+        model.addAttribute("specs", specs);
 
-        model.addAttribute("product", product); // Đưa sản phẩm vào model
-        model.addAttribute("reports", reports); // Đưa các đánh giá vào model
-        model.addAttribute("specs", specs); // Thêm vào model
-        return "products/detail"; // Trả về view chi tiết sản phẩm
+        return "products/detail";
     }
-
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam("productName") String productName, Model model) {
