@@ -1,4 +1,3 @@
-<!-- categories/shopper_list.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -12,7 +11,8 @@
     <h2>Danh mục sản phẩm</h2>
     <ul class="list-group">
         <li class="list-group-item" th:each="category : ${categories}">
-            <a th:href="@{/{id}/products(id=${category.id})}" th:text="${category.categoryName}" class="text-decoration-none"></a>
+            <a th:href="@{/{id}/products(id=${category.id})}"
+               th:text="${category.categoryName}" class="text-decoration-none"></a>
         </li>
     </ul>
 </div>
