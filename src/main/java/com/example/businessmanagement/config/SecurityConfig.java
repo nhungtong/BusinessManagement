@@ -25,7 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler customHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index","/categories/**", "/stores/**", "/products/**", "reports/**").permitAll()
+                        .requestMatchers("/", "/index","/categories/**", "/stores/**", "/products/**", "reports/**","warranty/**", "/api/chat").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/css/**", "/images/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("ROLE_ADMIN")

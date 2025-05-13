@@ -14,7 +14,7 @@
 <p>Trạng thái thanh toán: <span th:text="${status}"></span></p>
 <p>Mã giao dịch: <span th:text="${transactionId}"></span></p>
   <div class="mt-4 d-flex justify-content-center gap-3">
-    <a th:href="@{/'/'}" class="btn btn-outline-primary" sec:authorize="hasRole('ROLE_SHOPPER')">
+    <a th:href="@{/}" class="btn btn-outline-primary" sec:authorize="hasRole('ROLE_SHOPPER')">
       <i class="bi bi-house-door"></i> Quay lại trang người dùng
     </a>
     <a th:href="@{/shipper}" class="btn btn-outline-success" sec:authorize="hasRole('ROLE_SHIPPER')">

@@ -20,18 +20,16 @@ public class OrderService {
     private final OrderDetailRepository orderDetailsRepository;
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
-    private final CartRepository cartRepository;
     private final CartService cartService;
-    private final StoreProductRepository storeProductRepository;
+    private final WarrantyRepository warrantyRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderDetailRepository orderDetailsRepository, UserRepository userRepository, AddressRepository addressRepository, CartRepository cartRepository, CartService cartService, StoreProductRepository storeProductRepository) {
+    public OrderService(OrderRepository orderRepository, OrderDetailRepository orderDetailsRepository, UserRepository userRepository, AddressRepository addressRepository, CartService cartService, WarrantyRepository warrantyRepository) {
         this.orderRepository = orderRepository;
         this.orderDetailsRepository = orderDetailsRepository;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
-        this.cartRepository = cartRepository;
         this.cartService = cartService;
-        this.storeProductRepository = storeProductRepository;
+        this.warrantyRepository = warrantyRepository;
     }
 
     // danh sách đơn hàng
@@ -147,6 +145,11 @@ public class OrderService {
 
         orderRepository.save(order);
 
+        Warranty warranty = new Warranty();
+        warranty.setOrder(order);
+        warranty.setStartDate(new Date());
+        warranty.setEndDate(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365 * 2));
+        warrantyRepository.save(warranty);
 
         for (Cart item : cartItems) {
             OrderDetails detail = new OrderDetails();
